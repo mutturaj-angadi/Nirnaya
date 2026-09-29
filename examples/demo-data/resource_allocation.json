@@ -1,0 +1,29 @@
+{
+  "name": "resource_allocation",
+  "title": "Departmental Resource Allocation",
+  "description": "Allocate labor, capital, and raw-material budget across 5 project proposals to maximize expected return subject to resource ceilings.",
+  "domain": "operations-research",
+  "sense": "maximize",
+  "variables": [
+    {"name": "proj1", "lower": 0, "upper": 1, "type": "continuous", "unit": "fraction funded"},
+    {"name": "proj2", "lower": 0, "upper": 1, "type": "continuous", "unit": "fraction funded"},
+    {"name": "proj3", "lower": 0, "upper": 1, "type": "continuous", "unit": "fraction funded"},
+    {"name": "proj4", "lower": 0, "upper": 1, "type": "continuous", "unit": "fraction funded"},
+    {"name": "proj5", "lower": 0, "upper": 1, "type": "continuous", "unit": "fraction funded"}
+  ],
+  "objective": {
+    "offset": 0,
+    "coefficients": {"proj1": 420, "proj2": 310, "proj3": 260, "proj4": 190, "proj5": 340}
+  },
+  "constraints": [
+    {"name": "labor_budget", "sense": "<=", "rhs": 100,
+      "coefficients": {"proj1": 40, "proj2": 25, "proj3": 20, "proj4": 15, "proj5": 30}},
+    {"name": "capital_budget", "sense": "<=", "rhs": 120,
+      "coefficients": {"proj1": 30, "proj2": 35, "proj3": 25, "proj4": 20, "proj5": 40}},
+    {"name": "material_budget", "sense": "<=", "rhs": 90,
+      "coefficients": {"proj1": 20, "proj2": 15, "proj3": 30, "proj4": 10, "proj5": 25}},
+    {"name": "min_portfolio_diversity", "sense": ">=", "rhs": 1.5,
+      "coefficients": {"proj1": 1, "proj2": 1, "proj3": 1, "proj4": 1, "proj5": 1}}
+  ],
+  "metadata": {"source": "synthetic, continuous relaxation of a project-selection LP"}
+}

@@ -1,0 +1,17 @@
+{
+  "name": "bounded_production",
+  "title": "Bounded Production Problem",
+  "description": "Two-product production LP with explicit variable upper bounds (machine and market caps) plus a shared labor constraint. Every variable has finite bounds so the feasible region is a bounded polytope.",
+  "sense": "maximize",
+  "variables": [
+    {"name": "unitsA", "lower": 0, "upper": 80, "type": "continuous"},
+    {"name": "unitsB", "lower": 0, "upper": 60, "type": "continuous"}
+  ],
+  "objective": {"offset": 0, "coefficients": {"unitsA": 25, "unitsB": 18}},
+  "constraints": [
+    {"name": "labor_hours", "sense": "<=", "rhs": 2200, "coefficients": {"unitsA": 20, "unitsB": 15}},
+    {"name": "machine_hours", "sense": "<=", "rhs": 1500, "coefficients": {"unitsA": 12, "unitsB": 10}},
+    {"name": "raw_material", "sense": "<=", "rhs": 900, "coefficients": {"unitsA": 6, "unitsB": 9}}
+  ],
+  "expected": {"status": "optimal"}
+}

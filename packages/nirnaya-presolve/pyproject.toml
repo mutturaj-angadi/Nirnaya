@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nirnaya-presolve"
+version = "0.1.0"
+description = "LP preprocessing / presolve engine for Nirnaya (Part 2). Integrates with nirnaya-core's public API."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "nirnaya-core",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

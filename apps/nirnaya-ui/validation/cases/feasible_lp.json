@@ -1,0 +1,16 @@
+{
+  "name": "feasible_lp",
+  "title": "Simple Feasible LP",
+  "description": "Small, hand-verifiable feasible LP. Optimal is unique and easy to sanity-check: maximize 3x+2y s.t. x+y<=4, x+3y<=6, x,y>=0.",
+  "sense": "maximize",
+  "variables": [
+    {"name": "x", "lower": 0, "upper": null, "type": "continuous"},
+    {"name": "y", "lower": 0, "upper": null, "type": "continuous"}
+  ],
+  "objective": {"offset": 0, "coefficients": {"x": 3, "y": 2}},
+  "constraints": [
+    {"name": "c1", "sense": "<=", "rhs": 4, "coefficients": {"x": 1, "y": 1}},
+    {"name": "c2", "sense": "<=", "rhs": 6, "coefficients": {"x": 1, "y": 3}}
+  ],
+  "expected": {"status": "optimal", "objective": 12.0, "variables": {"x": 4.0, "y": 0.0}, "note": "Confirmed by independent reference solver (scipy/HiGHS); the vertex (3,1) is feasible but not optimal."}
+}

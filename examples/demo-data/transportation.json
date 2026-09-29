@@ -1,0 +1,46 @@
+{
+  "name": "transportation",
+  "title": "Transportation / Distribution Problem",
+  "description": "Classic balanced transportation problem: ship product from 3 plants to 4 distribution centers at minimum shipping cost, respecting plant supply and DC demand.",
+  "domain": "logistics",
+  "sense": "minimize",
+  "variables": [
+    {"name": "x_P1_D1", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P1_D2", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P1_D3", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P1_D4", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P2_D1", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P2_D2", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P2_D3", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P2_D4", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P3_D1", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P3_D2", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P3_D3", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "x_P3_D4", "lower": 0, "upper": null, "type": "continuous", "unit": "units"}
+  ],
+  "objective": {
+    "offset": 0,
+    "coefficients": {
+      "x_P1_D1": 4, "x_P1_D2": 6, "x_P1_D3": 9, "x_P1_D4": 5,
+      "x_P2_D1": 7, "x_P2_D2": 3, "x_P2_D3": 6, "x_P2_D4": 8,
+      "x_P3_D1": 6, "x_P3_D2": 5, "x_P3_D3": 4, "x_P3_D4": 7
+    }
+  },
+  "constraints": [
+    {"name": "supply_P1", "sense": "<=", "rhs": 350,
+      "coefficients": {"x_P1_D1": 1, "x_P1_D2": 1, "x_P1_D3": 1, "x_P1_D4": 1}},
+    {"name": "supply_P2", "sense": "<=", "rhs": 400,
+      "coefficients": {"x_P2_D1": 1, "x_P2_D2": 1, "x_P2_D3": 1, "x_P2_D4": 1}},
+    {"name": "supply_P3", "sense": "<=", "rhs": 300,
+      "coefficients": {"x_P3_D1": 1, "x_P3_D2": 1, "x_P3_D3": 1, "x_P3_D4": 1}},
+    {"name": "demand_D1", "sense": ">=", "rhs": 250,
+      "coefficients": {"x_P1_D1": 1, "x_P2_D1": 1, "x_P3_D1": 1}},
+    {"name": "demand_D2", "sense": ">=", "rhs": 300,
+      "coefficients": {"x_P1_D2": 1, "x_P2_D2": 1, "x_P3_D2": 1}},
+    {"name": "demand_D3", "sense": ">=", "rhs": 240,
+      "coefficients": {"x_P1_D3": 1, "x_P2_D3": 1, "x_P3_D3": 1}},
+    {"name": "demand_D4", "sense": ">=", "rhs": 210,
+      "coefficients": {"x_P1_D4": 1, "x_P2_D4": 1, "x_P3_D4": 1}}
+  ],
+  "metadata": {"source": "synthetic, classic Hitchcock-Koopmans transportation LP", "note": "total supply (1050) exceeds total demand (1000), feasible with slack"}
+}

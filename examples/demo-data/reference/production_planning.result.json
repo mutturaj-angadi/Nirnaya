@@ -1,0 +1,24 @@
+{
+  "engine": "scipy.optimize.linprog(method=highs)",
+  "status": "optimal",
+  "objective": 13840.0,
+  "variables": {
+    "prodA_w1": 120.0,
+    "prodA_w2": 140.0,
+    "prodA_w3": 130.0,
+    "prodA_w4": 150.0,
+    "prodB_w1": 200.0,
+    "prodB_w2": 180.0,
+    "prodB_w3": 210.0,
+    "prodB_w4": 190.0,
+    "invA_w1": 0.0,
+    "invA_w2": 0.0,
+    "invA_w3": 0.0,
+    "invB_w1": 0.0,
+    "invB_w2": 0.0,
+    "invB_w3": 0.0
+  },
+  "iterations": 6,
+  "raw_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "max_residual": 0.0
+}

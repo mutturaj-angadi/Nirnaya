@@ -1,0 +1,8 @@
+{
+  "engine": "scipy.optimize.linprog(method=highs)",
+  "status": "infeasible",
+  "objective": null,
+  "variables": null,
+  "iterations": 0,
+  "raw_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+}

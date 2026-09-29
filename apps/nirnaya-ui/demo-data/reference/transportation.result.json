@@ -1,0 +1,22 @@
+{
+  "engine": "scipy.optimize.linprog(method=highs)",
+  "status": "optimal",
+  "objective": 4180.0,
+  "variables": {
+    "x_P1_D1": 200.0,
+    "x_P1_D2": 0.0,
+    "x_P1_D3": 0.0,
+    "x_P1_D4": 150.0,
+    "x_P2_D1": 50.0,
+    "x_P2_D2": 300.0,
+    "x_P2_D3": 0.0,
+    "x_P2_D4": 0.0,
+    "x_P3_D1": 0.0,
+    "x_P3_D2": 0.0,
+    "x_P3_D3": 240.0,
+    "x_P3_D4": 60.0
+  },
+  "iterations": 6,
+  "raw_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "max_residual": 0.0
+}

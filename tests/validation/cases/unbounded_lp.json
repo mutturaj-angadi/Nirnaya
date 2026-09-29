@@ -1,0 +1,15 @@
+{
+  "name": "unbounded_lp",
+  "title": "Unbounded LP",
+  "description": "Objective can grow without limit: maximize x+y with only a lower bound (x,y>=0) and no upper-bounding constraint. Used to verify the solver's unboundedness detection.",
+  "sense": "maximize",
+  "variables": [
+    {"name": "x", "lower": 0, "upper": null, "type": "continuous"},
+    {"name": "y", "lower": 0, "upper": null, "type": "continuous"}
+  ],
+  "objective": {"offset": 0, "coefficients": {"x": 1, "y": 1}},
+  "constraints": [
+    {"name": "c1", "sense": ">=", "rhs": 1, "coefficients": {"x": 1, "y": -1}}
+  ],
+  "expected": {"status": "unbounded"}
+}

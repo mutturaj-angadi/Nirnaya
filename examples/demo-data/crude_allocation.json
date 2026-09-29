@@ -1,0 +1,41 @@
+{
+  "name": "crude_allocation",
+  "title": "Crude / Product Allocation",
+  "description": "Allocate two crude oil types (light sweet, heavy sour) across three distillation units to satisfy diesel and gasoline demand at minimum total processing + crude cost.",
+  "domain": "petroleum-refining",
+  "sense": "minimize",
+  "variables": [
+    {"name": "light_u1", "lower": 0, "upper": 40, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "light_u2", "lower": 0, "upper": 35, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "light_u3", "lower": 0, "upper": 25, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "heavy_u1", "lower": 0, "upper": 40, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "heavy_u2", "lower": 0, "upper": 35, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "heavy_u3", "lower": 0, "upper": 25, "type": "continuous", "unit": "kbbl/day"}
+  ],
+  "objective": {
+    "offset": 0,
+    "coefficients": {
+      "light_u1": 62.0, "light_u2": 63.5, "light_u3": 61.0,
+      "heavy_u1": 54.0, "heavy_u2": 55.5, "heavy_u3": 53.5
+    }
+  },
+  "constraints": [
+    {"name": "unit1_capacity", "sense": "<=", "rhs": 40.0,
+      "coefficients": {"light_u1": 1, "heavy_u1": 1}},
+    {"name": "unit2_capacity", "sense": "<=", "rhs": 35.0,
+      "coefficients": {"light_u2": 1, "heavy_u2": 1}},
+    {"name": "unit3_capacity", "sense": "<=", "rhs": 25.0,
+      "coefficients": {"light_u3": 1, "heavy_u3": 1}},
+    {"name": "diesel_demand", "sense": ">=", "rhs": 30.0,
+      "coefficients": {"light_u1": 0.32, "light_u2": 0.30, "light_u3": 0.33,
+                        "heavy_u1": 0.42, "heavy_u2": 0.40, "heavy_u3": 0.41}},
+    {"name": "gasoline_demand", "sense": ">=", "rhs": 25.0,
+      "coefficients": {"light_u1": 0.45, "light_u2": 0.47, "light_u3": 0.44,
+                        "heavy_u1": 0.28, "heavy_u2": 0.27, "heavy_u3": 0.26}},
+    {"name": "light_crude_supply", "sense": "<=", "rhs": 55.0,
+      "coefficients": {"light_u1": 1, "light_u2": 1, "light_u3": 1}},
+    {"name": "heavy_crude_supply", "sense": "<=", "rhs": 60.0,
+      "coefficients": {"heavy_u1": 1, "heavy_u2": 1, "heavy_u3": 1}}
+  ],
+  "metadata": {"source": "synthetic, plausible crude allocation LP", "units_note": "cost in $/bbl, yields as fraction of feed"}
+}

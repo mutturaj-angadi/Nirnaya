@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nirnaya — LP Solver Console</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar">
+    <div class="brand">निर्णय <span class="mark">Nirnaya</span><span class="sub">DECISION OPTIMIZATION PLATFORM</span></div>
+    <div class="topbar-spacer"></div>
+    <div class="conn-field">
+      <label style="margin:0;">API</label>
+      <input type="text" id="api-base-url" value="" spellcheck="false" aria-label="Nirnaya API base URL">
+      <button id="btn-connect" class="ghost">Connect</button>
+    </div>
+    <div class="status-pill bad" id="conn-status"><span class="status-dot"></span><span id="conn-status-text">API OFFLINE</span></div>
+  </div>
+
+  <div class="nav" id="nav">
+    <div class="nav-group-label">DECISION WORKFLOW</div>
+    <div class="nav-item active" data-view="overview"><span class="n-icon">◎</span>Overview</div>
+    <div class="nav-item" data-view="model"><span class="n-icon">▤</span>Model</div>
+    <div class="nav-item" data-view="solver"><span class="n-icon">▶</span>Optimize</div>
+    <div class="nav-item" data-view="solution"><span class="n-icon">✓</span>Solution</div>
+    <div class="nav-item" data-view="diagnostics"><span class="n-icon">△</span>Presolve &amp; Verify</div>
+    <div class="nav-item" data-view="scenarios"><span class="n-icon">◇</span>Scenarios</div>
+    <div class="nav-item" data-view="validation"><span class="n-icon">✓</span>Validation</div>
+    <div class="nav-group-label">EVIDENCE</div>
+    <div class="nav-item" data-view="gpu"><span class="n-icon">▦</span>GPU</div>
+    <div class="nav-item" data-view="benchmarks"><span class="n-icon">▬</span>Benchmarks</div>
+    <div class="nav-item" data-view="architecture"><span class="n-icon">⇄</span>Architecture</div>
+    <div class="nav-item" data-view="security"><span class="n-icon">▣</span>Security</div>
+  </div>
+
+  <div class="main" id="main">
+    <div class="panel" id="api-offline-banner"><strong>API OFFLINE.</strong> Live solve results are unavailable. From the repository root, run <code>python scripts/launch_demo.py</code> to start the API and dashboard together.</div>
+
+    <!-- ============ OVERVIEW ============ -->
+    <section class="view active" id="view-overview">
+      <div class="hero-panel">
+        <div class="eyebrow">INDUSTRIAL DECISION SUPPORT · CONTINUOUS LINEAR PROGRAMMING</div>
+        <h1>NIRNAYA</h1>
+        <p class="hero-subtitle">Indigenous mathematical optimization platform for validated, explainable industrial decisions.</p>
+        <div class="flow-strip" aria-label="Data to decision workflow">
+          <span>DATA</span><b>›</b><span>VALIDATE</span><b>›</b><span>MODEL</span><b>›</b><span>PRESOLVE</span><b>›</b><span>REVISED SIMPLEX</span><b>›</b><span>VERIFY</span><b>›</b><span>SCENARIOS</span><b>›</b><span>DECISION</span>
+        </div>
+        <div class="hero-note"><strong>The refinery showcase is an MRPL-inspired synthetic scenario. It contains no MRPL or live plant operating data.</strong> Reference optimization is used for validation only.</div>
+      </div>
+      <div class="view-header">
+        <div>
+          <div class="view-title">Decision overview</div>
+          <div class="view-desc">Live model, solver, objective, feasibility, presolve, and connected backend status.</div>
+        </div>
+      </div>
+
+      <div class="grid cols-4" id="overview-metrics">
+        <div class="metric"><div class="metric-label">MODEL LOADED</div><div class="metric-value dim" id="ov-model">none</div></div>
+        <div class="metric"><div class="metric-label">SOLVER STATUS</div><div class="metric-value dim" id="ov-status">unavailable</div></div>
+        <div class="metric"><div class="metric-label">BACKEND</div><div class="metric-value dim" id="ov-backend">unavailable</div></div>
+        <div class="metric"><div class="metric-label">API CONNECTION</div><div class="metric-value dim" id="ov-conn">API OFFLINE</div></div>
+      </div>
+
+      <div class="section-gap grid cols-4" id="overview-live-metrics">
+        <div class="metric"><div class="metric-label">OBJECTIVE</div><div class="metric-value" id="ov-objective">unavailable</div></div>
+        <div class="metric"><div class="metric-label">FEASIBILITY</div><div class="metric-value" id="ov-feasibility">unavailable</div><div class="metric-sub" id="ov-violation">max violation unavailable</div></div>
+        <div class="metric"><div class="metric-label">PRESOLVE REDUCTION</div><div class="metric-value" id="ov-presolve">unavailable</div></div>
+        <div class="metric"><div class="metric-label">SOLVE TIME</div><div class="metric-value" id="ov-solve-time">unavailable</div></div>
+      </div>
+
+      <div class="section-gap grid cols-3">
+        <div class="metric"><div class="metric-label">VARIABLES</div><div class="metric-value" id="ov-vars">—</div></div>
+        <div class="metric"><div class="metric-label">CONSTRAINTS</div><div class="metric-value" id="ov-cons">—</div></div>
+        <div class="metric"><div class="metric-label">NONZEROS</div><div class="metric-value" id="ov-nnz">—</div></div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">WHAT NIRNAYA DOES</div>
+        <p style="margin:0 0 10px;color:var(--text-dim);max-width:820px;">
+          Nirnaya validates a linear model, performs reversible presolve reductions, solves it with its own CPU revised-simplex engine, and checks the recovered solution against original constraints and bounds. GPU device discovery and numerical primitives are provided separately; LP simplex execution is CPU-only in this release.
+        </p>
+        <div class="chips">
+          <span class="badge">Model validation</span>
+          <span class="badge">Reversible presolve</span>
+          <span class="badge">Two-phase revised simplex</span>
+          <span class="badge">Sparse LU · CPU</span>
+          <span class="badge">Original-model verification</span>
+          <span class="badge">API + dashboard</span>
+        </div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">EVENT LOG</div>
+        <div class="log-panel" id="event-log"></div>
+      </div>
+    </section>
+
+    <!-- ============ MODEL ============ -->
+    <section class="view" id="view-model">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Model</div>
+          <div class="view-desc">Load industrial-style synthetic LP examples, the sparse validation model, or the flagship refinery scenario; paste or upload another model when needed.</div>
+        </div>
+        <div>
+          <input type="file" id="model-file-input" accept="application/json" style="display:none;">
+          <button id="btn-upload-model">Upload JSON</button>
+        </div>
+      </div>
+
+      <div class="model-picker" id="demo-model-picker"></div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">MODEL SOURCE (editable JSON)</div>
+          <textarea id="model-editor" spellcheck="false"></textarea>
+          <div class="help-text">Schema: variables[], objective.coefficients, constraints[].coefficients — see docs/API_CONTRACT.md.</div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">MODEL SUMMARY</div>
+          <div id="model-summary">
+            <div class="empty-state"><div class="glyph">▤</div>No model loaded. Pick a demo example or upload a JSON file.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">SPARSE CONSTRAINT MATRIX (structure)</div>
+        <div class="canvas-wrap"><canvas id="spy-canvas" width="760" height="360"></canvas></div>
+        <div class="help-text">Each dot is a nonzero coefficient A[i,j]. Rows = constraints, columns = variables.</div>
+      </div>
+    </section>
+
+    <!-- ============ SOLVER ============ -->
+    <section class="view" id="view-solver">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Solver</div>
+          <div class="view-desc">Choose a backend and options, then run the model against the connected API.</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">BACKEND</div>
+          <div class="backend-toggle" id="backend-toggle">
+            <button data-backend="cpu" class="active">CPU</button>
+            <button data-backend="gpu">GPU</button>
+          </div>
+          <div class="help-text" id="backend-help">Solves on the integrated Nirnaya API host CPU using the two-phase revised-simplex engine.</div>
+
+          <div class="field section-gap">
+            <label>Max iterations</label>
+              <input type="number" id="opt-max-iter" value="10000" min="1">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Tolerance</label>
+              <input type="text" id="opt-tolerance" value="1e-7">
+            </div>
+            <div class="field">
+              <label>Time limit (s)</label>
+              <input type="number" id="opt-time-limit" value="30" min="1">
+            </div>
+          </div>
+          <div class="field">
+            <label><input type="checkbox" id="opt-presolve" checked style="width:auto;"> Enable presolve</label>
+          </div>
+
+          <button class="primary" id="btn-run-solve" style="width:100%;margin-top:6px;">Run optimization</button>
+          <div class="help-text" id="run-help"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">RUN LOG</div>
+          <div class="log-panel" id="solver-log"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SOLUTION ============ -->
+    <section class="view" id="view-solution">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Solution</div>
+          <div class="view-desc">Objective value, status, and variable values from the most recent solve.</div>
+        </div>
+        <div>
+          <button id="btn-export-json" disabled>Export JSON</button>
+          <button id="btn-export-csv" disabled>Export CSV</button>
+        </div>
+      </div>
+
+      <div class="grid cols-4">
+        <div class="metric"><div class="metric-label">STATUS</div><div class="metric-value dim" id="sol-status">—</div></div>
+        <div class="metric"><div class="metric-label">OBJECTIVE</div><div class="metric-value" id="sol-objective">—</div></div>
+        <div class="metric"><div class="metric-label">ITERATIONS</div><div class="metric-value blue" id="sol-iterations">—</div></div>
+        <div class="metric"><div class="metric-label">SOLVE TIME</div><div class="metric-value blue" id="sol-time">—</div></div>
+      </div>
+
+      <div class="section-gap two-col">
+        <div class="panel">
+          <div class="panel-title">VARIABLE VALUES</div>
+          <div class="table-scroll" id="sol-variables-table">
+            <div class="empty-state"><div class="glyph">✓</div>No solve has run yet.</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">VARIABLE DISTRIBUTION</div>
+          <div class="canvas-wrap"><canvas id="var-dist-canvas" width="420" height="320"></canvas></div>
+        </div>
+      </div>
+
+      <div class="section-gap panel" id="sol-explanation">
+        <div class="panel-title">DECISION EXPLANATION</div>
+        <div class="empty-state">Run an optimization to inspect the largest objective contributions and binding limits.</div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">OBJECTIVE / ITERATION PROGRESS</div>
+        <div id="progress-chart-wrap" class="canvas-wrap"><canvas id="progress-canvas" height="140"></canvas></div>
+        <div class="help-text" id="progress-help"></div>
+      </div>
+    </section>
+
+    <!-- ============ SCENARIOS ============ -->
+    <section class="view" id="view-scenarios">
+      <div class="view-header"><div><div class="view-title">Scenario analysis</div><div class="view-desc">Rerun the bundled refinery model after applying explicit operating assumption changes.</div></div></div>
+      <div class="panel scenario-notice"><strong>Illustrative only.</strong> These are MRPL-inspired synthetic assumptions, not MRPL or plant operating data. Every change is listed in the result, every scenario is solved through Nirnaya's production API, and infeasible/time-limited outcomes remain visible.</div>
+      <div class="section-gap grid cols-2" id="scenario-cards"></div>
+      <div class="section-gap"><button class="primary" id="btn-run-scenarios">Run all documented scenarios</button><span class="help-text" id="scenario-progress"></span></div>
+      <div class="section-gap panel"><div class="panel-title">OUTCOME COMPARISON</div><div class="table-scroll" id="scenario-results"><div class="empty-state">Run scenarios to compare actual status, objective, principal decisions, and binding constraints.</div></div></div>
+      <div class="section-gap panel"><div class="panel-title">SCENARIO CHANGE AUDIT</div><div class="table-scroll" id="scenario-audit"><div class="empty-state">No scenario transformations have been applied in this session.</div></div></div>
+      <div class="help-text">Nirnaya does not publish validated shadow prices or sensitivity certificates; those values are unavailable.</div>
+    </section>
+
+    <!-- ============ VALIDATION ============ -->
+    <section class="view" id="view-validation">
+      <div class="view-header"><div><div class="view-title">Independent validation</div><div class="view-desc">Executed reference comparisons from the latest local validation run.</div></div><button id="btn-load-validation">Load validation report</button></div>
+      <div class="panel"><strong>Reference solver used for validation only.</strong> It is not part of Nirnaya's production solve path.</div>
+      <div class="section-gap grid cols-4" id="validation-summary"></div>
+      <div class="section-gap panel"><div class="panel-title">CASE-BY-CASE RESULTS</div><div class="table-scroll" id="validation-table"><div class="empty-state">Connect to the API and load a completed validation report.</div></div></div>
+    </section>
+
+    <!-- ============ DIAGNOSTICS ============ -->
+    <section class="view" id="view-diagnostics">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Presolve &amp; verification</div>
+          <div class="view-desc">Original model → recorded presolve transformations → reduced model → solve → postsolve recovery → original-space feasibility verification.</div>
+        </div>
+      </div>
+
+      <div class="grid cols-4">
+        <div class="metric"><div class="metric-label">MAX RESIDUAL</div><div class="metric-value" id="diag-max-resid">—</div></div>
+        <div class="metric"><div class="metric-label">DUALITY GAP</div><div class="metric-value dim" id="diag-gap">—</div></div>
+        <div class="metric"><div class="metric-label">PRESOLVE TIME</div><div class="metric-value blue" id="diag-presolve">—</div></div>
+        <div class="metric"><div class="metric-label">PRESOLVE REDUCTION</div><div class="metric-value blue" id="diag-reduction">unavailable</div></div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">ORIGINAL MODEL → PRESOLVED MODEL</div>
+        <div id="diag-dimensions" class="table-scroll"><div class="empty-state">Run a model to measure the actual presolve dimensions.</div></div>
+        <div class="help-text">Counts and reduction rates are measured from the original request and the actual reduced model. Unavailable counts are not inferred.</div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">CONSTRAINT RESIDUALS</div>
+        <div class="canvas-wrap"><canvas id="resid-canvas" height="160"></canvas></div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">CONSTRAINT SATISFACTION DETAIL</div>
+        <div class="table-scroll" id="diag-table">
+          <div class="empty-state"><div class="glyph">△</div>No solve has run yet.</div>
+        </div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">SOLVE STATISTICS</div>
+        <div id="diag-stats"><div class="empty-state"><div class="glyph">▬</div>No solve has run yet.</div></div>
+      </div>
+    </section>
+
+    <!-- ============ GPU ============ -->
+    <section class="view" id="view-gpu">
+      <div class="view-header">
+        <div>
+          <div class="view-title">GPU</div>
+          <div class="view-desc">Real device detection reported by the connected API — never assumed.</div>
+        </div>
+        <button id="btn-refresh-sysinfo">Refresh</button>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="panel">
+          <div class="panel-title">CPU</div>
+          <div id="gpu-cpu-info"><div class="empty-state"><div class="glyph">▦</div>Connect to the API to read system info.</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">GPU</div>
+          <div id="gpu-gpu-info"><div class="empty-state"><div class="glyph">▦</div>Connect to the API to read system info.</div></div>
+        </div>
+      </div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">BACKEND VERSIONS</div>
+        <div id="gpu-versions"><div class="empty-state">Connect to the API to read backend versions.</div></div>
+      </div>
+      <div class="section-gap panel"><strong>LP execution:</strong> CPU only in this release. GPU detection and numerical primitives do not mean an LP was solved on GPU.</div>
+    </section>
+
+    <!-- ============ BENCHMARKS ============ -->
+    <section class="view" id="view-benchmarks">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Benchmarks</div>
+        <div class="view-desc">The in-process production benchmark matrix. Separate from live HTTP release validation and the synthetic validation suite.</div>
+        </div>
+        <button id="btn-load-benchmarks">Load from API</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">IN-PROCESS PRODUCTION BENCHMARK MATRIX · CPU</div>
+        <div class="canvas-wrap"><canvas id="bench-canvas" height="180"></canvas></div>
+      </div>
+      <div class="section-gap panel"><div class="panel-title">STATUS COUNTS</div><div class="grid cols-4" id="benchmark-summary"><div class="empty-state">Load the recorded in-process benchmark matrix.</div></div></div>
+      <div class="section-gap panel" id="benchmark-methodology"><div class="panel-title">METHODOLOGY</div><div class="help-text">This artifact runs models through Nirnaya's production orchestrator in-process and compares independently with SciPy/HiGHS. It is not the live HTTP release matrix and not the separate synthetic validation suite. It is not a controlled speed ranking: Nirnaya includes its presolve/recovery path while SciPy/HiGHS applies its own configuration.</div><div class="help-text">Heavy concurrent API requests may contend for CPU and reach their configured time limits; the API currently has no solve admission control.</div></div>
+
+      <div class="section-gap panel">
+        <div class="panel-title">RECORDED RUNS</div>
+        <div class="table-scroll" id="bench-table">
+          <div class="empty-state"><div class="glyph">▬</div>No in-process benchmark matrix loaded. Run <code>python benchmarks/run_benchmark_matrix.py --time-limit 30</code>, then click "Load from API".</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ARCHITECTURE ============ -->
+    <section class="view" id="view-architecture">
+      <div class="view-header"><div><div class="view-title">Architecture</div><div class="view-desc">Actual package responsibilities and dependency direction.</div></div></div>
+      <div class="panel architecture-flow">
+        <div class="arch-node">nirnaya-core<br><small>validated model · sparse matrices · result contracts</small></div><div class="arch-arrow">↓</div>
+        <div class="arch-node">nirnaya-presolve<br><small>reversible reductions · postsolve recovery</small></div><div class="arch-arrow">↓</div>
+        <div class="arch-node">nirnaya-solver<br><small>two-phase revised simplex · sparse LU · CPU</small></div>
+        <div class="arch-branch"><div class="arch-node muted">nirnaya-gpu<br><small>device discovery · numerical primitives<br>not used by simplex</small></div><div class="arch-node">nirnaya-api<br><small>schema · limits · orchestration · verification</small></div></div>
+        <div class="arch-arrow">↓</div><div class="arch-node">nirnaya-ui<br><small>model review · solve · explain · scenarios · validation</small></div>
+      </div>
+      <div class="section-gap panel"><div class="panel-title">DEPENDENCY RULE</div><p>Core defines the data contracts. Presolve and solver depend on core; API depends on those packages; the browser UI calls only the API. GPU primitives are a leaf capability and do not create a solver/API cycle. SciPy reference code is isolated under validation and benchmark tools.</p></div>
+    </section>
+
+    <!-- ============ SECURITY ============ -->
+    <section class="view" id="view-security">
+      <div class="view-header"><div><div class="view-title">Security &amp; input boundaries</div><div class="view-desc">Implemented controls and their limits.</div></div></div>
+      <div class="grid cols-2">
+        <div class="panel"><div class="panel-title">API ENFORCEMENT</div><div class="kv"><span class="k">REQUEST BODY</span><span class="v">5 MiB maximum</span></div><div class="kv"><span class="k">MODEL LIMIT</span><span class="v">200,000 vars / rows</span></div><div class="kv"><span class="k">COEFFICIENT ENTRIES</span><span class="v">5,000,000 maximum</span></div><div class="kv"><span class="k">REQUESTED SOLVE TIME</span><span class="v">600 s ceiling</span></div><div class="kv"><span class="k">WALL GUARD</span><span class="v">900 s cooperative wrapper</span></div><p class="help-text">The wrapper cannot forcibly terminate a blocked Python worker thread; the solver also checks its own deadline.</p></div>
+        <div class="panel"><div class="panel-title">MODEL &amp; RESULT HANDLING</div><p>Structured JSON schema validation; finite numeric and bounds validation in core; explicit iteration/time limits; deterministic pivot selection; original-space primal verification before OPTIMAL; structured error envelopes without serialized traceback details; no user-controlled shell execution or unsafe object deserialization.</p><p class="help-text">The data audit is read-only and reports anomalies; it does not silently clean or discard model content.</p></div>
+      </div>
+      <div class="section-gap panel"><strong>Known boundary:</strong> the local SciPy/HiGHS reference tools are validation-only and must not be exposed as the production solve backend.</div>
+    </section>
+
+    <div class="footer-note">Nirnaya · all live optimization values come from the connected API; explanatory and synthetic dataset content is labeled</div>
+  </div>
+</div>
+
+<script src="js/demo-data.js"></script>
+<script src="js/api-client.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

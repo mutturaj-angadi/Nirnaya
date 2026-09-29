@@ -1,0 +1,50 @@
+{
+  "name": "refinery_blending",
+  "title": "Refinery Gasoline Blending",
+  "description": "Blend 4 refinery streams (reformate, FCC naphtha, alkylate, light straight-run) into two gasoline grades (regular, premium) to maximize margin, subject to octane, vapor pressure and volume-availability limits.",
+  "domain": "petroleum-refining",
+  "sense": "maximize",
+  "variables": [
+    {"name": "reformate_reg",  "lower": 0, "upper": null, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "reformate_prem", "lower": 0, "upper": null, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "fcc_reg",        "lower": 0, "upper": null, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "fcc_prem",       "lower": 0, "upper": null, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "alkylate_reg",   "lower": 0, "upper": null, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "alkylate_prem",  "lower": 0, "upper": null, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "lsr_reg",        "lower": 0, "upper": null, "type": "continuous", "unit": "kbbl/day"},
+    {"name": "lsr_prem",       "lower": 0, "upper": null, "type": "continuous", "unit": "kbbl/day"}
+  ],
+  "objective": {
+    "offset": 0,
+    "coefficients": {
+      "reformate_reg": 8.10, "reformate_prem": 10.90,
+      "fcc_reg": 7.40, "fcc_prem": 10.10,
+      "alkylate_reg": 6.20, "alkylate_prem": 8.90,
+      "lsr_reg": 8.80, "lsr_prem": 11.60
+    }
+  },
+  "constraints": [
+    {"name": "reformate_avail", "sense": "<=", "rhs": 18.0,
+      "coefficients": {"reformate_reg": 1, "reformate_prem": 1}},
+    {"name": "fcc_avail", "sense": "<=", "rhs": 24.0,
+      "coefficients": {"fcc_reg": 1, "fcc_prem": 1}},
+    {"name": "alkylate_avail", "sense": "<=", "rhs": 10.0,
+      "coefficients": {"alkylate_reg": 1, "alkylate_prem": 1}},
+    {"name": "lsr_avail", "sense": "<=", "rhs": 14.0,
+      "coefficients": {"lsr_reg": 1, "lsr_prem": 1}},
+    {"name": "regular_octane_min", "sense": ">=", "rhs": 0,
+      "coefficients": {"reformate_reg": 12.5, "fcc_reg": 2.5, "alkylate_reg": 11.0, "lsr_reg": -8.0},
+      "note": "(RON_i - 87)*x_i summed, regular grade requires blended RON >= 87"},
+    {"name": "premium_octane_min", "sense": ">=", "rhs": 0,
+      "coefficients": {"reformate_prem": 7.5, "fcc_prem": -2.5, "alkylate_prem": 6.0, "lsr_prem": -13.0},
+      "note": "(RON_i - 92)*x_i summed, premium grade requires blended RON >= 92"},
+    {"name": "rvp_limit_reg", "sense": "<=", "rhs": 0,
+      "coefficients": {"reformate_reg": -3.9, "fcc_reg": -2.9, "alkylate_reg": -8.9, "lsr_reg": 6.1},
+      "note": "(RVP_i - 9.0)*x_i, regular RVP must be <= 9.0 psi"},
+    {"name": "premium_demand_min", "sense": ">=", "rhs": 12.0,
+      "coefficients": {"reformate_prem": 1, "fcc_prem": 1, "alkylate_prem": 1, "lsr_prem": 1}},
+    {"name": "regular_demand_min", "sense": ">=", "rhs": 20.0,
+      "coefficients": {"reformate_reg": 1, "fcc_reg": 1, "alkylate_reg": 1, "lsr_reg": 1}}
+  ],
+  "metadata": {"source": "synthetic, plausible refinery LP for demonstration", "units_note": "volumes in thousand barrels/day, margin in $/bbl"}
+}

@@ -1,0 +1,4 @@
+[tool.pytest.ini_options]
+testpaths = ["tests", "packages/nirnaya-core/tests", "packages/nirnaya-gpu/tests", "packages/nirnaya-api/tests", "apps/nirnaya-ui/tests"]
+addopts = "-ra --basetemp=.pytest-tmp --import-mode=importlib"
+markers = ["gpu: requires an available CUDA device"]

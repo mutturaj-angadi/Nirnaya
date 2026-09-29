@@ -1,0 +1,13 @@
+{
+  "scenario_set_id": "refinery_decision_demo_scenarios_v1",
+  "base_model": "refinery_decision_demo.json",
+  "classification": "illustrative synthetic scenarios; no operating plant data",
+  "scenarios": [
+    {"id": "baseline", "label": "Baseline", "description": "Original documented assumptions.", "transformations": []},
+    {"id": "high_demand", "label": "Higher product demand", "description": "Raises all four minimum market deliveries by 20 percent.", "transformations": [{"type": "constraint_rhs_multiplier", "match": "_minimum_demand", "factor": 1.2, "classification": "SCENARIO_ANALYSIS", "reason": "Illustrative demand shock; all demand rows matched by suffix."}]},
+    {"id": "low_crude", "label": "Lower crude availability", "description": "Reduces all three crude upper bounds by 25 percent.", "transformations": [{"type": "variable_upper_multiplier", "match": "crude_", "factor": 0.75, "classification": "SCENARIO_ANALYSIS", "reason": "Illustrative supply disruption; all crude decision variables matched by prefix."}]},
+    {"id": "high_energy_cost", "label": "Higher processing energy cost", "description": "Reduces net contribution for each processed crude by 3 illustrative currency units per kbbl.", "transformations": [{"type": "objective_coefficient_delta", "match": "crude_", "delta": -3.0, "classification": "SCENARIO_ANALYSIS", "reason": "Illustrative energy price shock represented as incremental processing cost."}]},
+    {"id": "tight_capacity", "label": "Tighter refinery capacity", "description": "Reduces throughput capacity by 20 percent.", "transformations": [{"type": "constraint_rhs_multiplier", "match": "refinery_throughput_capacity", "factor": 0.8, "classification": "SCENARIO_ANALYSIS", "reason": "Illustrative maintenance or unit availability case."}]},
+    {"id": "higher_export_cost", "label": "Higher export logistics cost", "description": "Reduces net contribution on exported products by 4 illustrative currency units per kbbl.", "transformations": [{"type": "objective_coefficient_delta", "match": "ship_export_", "delta": -4.0, "classification": "SCENARIO_ANALYSIS", "reason": "Illustrative export freight increase applied uniformly to export shipment variables."}]}
+  ]
+}

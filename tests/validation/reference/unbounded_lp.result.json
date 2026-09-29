@@ -1,0 +1,8 @@
+{
+  "engine": "scipy.optimize.linprog(method=highs)",
+  "status": "unbounded",
+  "objective": null,
+  "variables": null,
+  "iterations": 1,
+  "raw_message": "The problem is unbounded. (HiGHS Status 10: model_status is Unbounded; primal_status is Feasible)"
+}

@@ -1,0 +1,15 @@
+{
+  "engine": "scipy.optimize.linprog(method=highs)",
+  "status": "optimal",
+  "objective": 1194.2857142857142,
+  "variables": {
+    "proj1": 0.5714285714285714,
+    "proj2": 1.0,
+    "proj3": 1.0,
+    "proj4": 1.0,
+    "proj5": 0.5714285714285714
+  },
+  "iterations": 2,
+  "raw_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "max_residual": 0.0
+}

@@ -1,0 +1,21 @@
+{
+  "format_version": "1.0",
+  "name": "diet-problem",
+  "variables": {
+    "bread": { "lb": 0.0, "ub": 10.0, "kind": "continuous" },
+    "milk":  { "lb": 0.0, "ub": 10.0, "kind": "continuous" }
+  },
+  "constraints": {
+    "budget": {
+      "coefficients": { "bread": 2.0, "milk": 3.0 },
+      "sense": "<=",
+      "rhs": 20.0
+    }
+  },
+  "objective": {
+    "coefficients": { "bread": 4.0, "milk": 3.0 },
+    "sense": "max",
+    "offset": 0.0
+  },
+  "options": {}
+}

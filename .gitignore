@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+.pytest-tmp/
+apps/nirnaya-ui/validation/validation_report.json
+apps/nirnaya-ui/validation/validation_run_metadata.json
+apps/nirnaya-ui/benchmarks/results/
+benchmarks/results/
+source-archives/
+datasets/
+*.zip
+**/validation_report.json
+**/validation_run_metadata.json

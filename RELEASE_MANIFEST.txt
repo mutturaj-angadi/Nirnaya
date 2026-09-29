@@ -1,0 +1,42 @@
+NIRNAYA — SIH 2026 PORTABLE RELEASE
+Release version: 1.0.0-sih2026
+Release date: 2026-09-28
+Package: Nirnaya_SIH2026_Final_Release.zip
+Package format: ZIP_DEFLATED; project files appear at the archive root, with no extra Nirnaya/Nirnaya nesting.
+
+CANONICAL WINDOWS COMMANDS
+Install runtime and test dependencies: python -m pip install -r requirements.txt
+Launch complete local demo: python scripts\launch_demo.py
+Run the full test suite: python -m pytest -q
+Run independent release validation (while the demo is running): python scripts\run_release_validation.py --base-url http://127.0.0.1:8000
+Run the 10,000-instance optimization validation corpus: python scripts\run_noc10k.py --workers 1
+Analyze a selected corpus run: python scripts\analyze_noc10k.py --input benchmarks\results\noc10k\run_eta_final.jsonl
+Run the in-process benchmark matrix: python benchmarks\run_benchmark_matrix.py --time-limit 30
+
+IMPORTANT DIRECTORIES
+apps\nirnaya-ui\src       Static judge dashboard assets
+packages\nirnaya-core     LP model contract, sparse data, and verification
+packages\nirnaya-presolve Presolve and reversible postsolve
+packages\nirnaya-solver   Production two-phase revised simplex
+packages\nirnaya-gpu      Optional GPU discovery and numerical primitives
+packages\nirnaya-api      CLI, REST API, and orchestration
+scripts                   Launcher, corpus tooling, and release validation
+datasets                  Synthetic demo data, NOC-10K manifest, regressions
+benchmarks                Synthetic inputs, scripts, and selected evidence
+docs                      Architecture, demo guide, validation, and limits
+tests                     Unit, solver, integration, API, and E2E tests
+
+INCLUDED VALIDATION EVIDENCE
+The 10,000-instance optimization validation corpus manifest and deterministic generator.
+Completed full-corpus runs, full and holdout summaries, and preserved regression cases.
+Current production benchmark, scenario, and live release-matrix records.
+The original 1,440-variable sparse LP and independent HiGHS reference data.
+
+DEPENDENCIES AND GPU
+Python 3.10 or later is required. requirements.txt installs the five local packages, their declared NumPy/SciPy/FastAPI/Pydantic dependencies, pytest, pytest-asyncio, and httpx. The demo has no runtime network download requirement. CUDA/CuPy is optional. Nirnaya's current LP simplex executes on CPU; the GPU package supplies a GPU-ready capability/primitive layer and does not claim GPU-accelerated LP solving.
+
+KNOWN LIMITATIONS
+The solver supports continuous LPs only. Concurrent heavy API solves have no admission control and can contend for CPU; the 30-second deadline is unchanged and no service-level timing guarantee is made. The standalone historical presolve tests target removed core APIs and fail collection; current integrated presolve paths are covered by the root test suite and live validation. A network-isolated package build was unavailable in the development environment. See docs\NOC10K.md, docs\NUMERICAL_RELIABILITY.md, and docs\VALIDATION.md.
+
+PACKAGE CREATION
+This archive is built by scripts\package_release.py from an explicit project-root allowlist and generated-file exclusions. It excludes Git/Codex/IDE state, caches, bytecode, source archive bundles, duplicate historical benchmark runs, and temporary files. It includes only selected reproducible validation artifacts. The ZIP is then checked for CRC and extracted to a new directory for release tests. SHA-256 is written beside the archive as Nirnaya_SIH2026_Final_Release.zip.sha256.

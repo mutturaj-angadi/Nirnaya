@@ -1,0 +1,59 @@
+{
+  "name": "production_planning",
+  "title": "Multi-Period Production Planning",
+  "description": "Plan production and inventory for two products over 4 weeks to meet demand at minimum production + holding cost, subject to weekly machine-hour capacity.",
+  "domain": "manufacturing",
+  "sense": "minimize",
+  "variables": [
+    {"name": "prodA_w1", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "prodA_w2", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "prodA_w3", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "prodA_w4", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "prodB_w1", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "prodB_w2", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "prodB_w3", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "prodB_w4", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "invA_w1", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "invA_w2", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "invA_w3", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "invB_w1", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "invB_w2", "lower": 0, "upper": null, "type": "continuous", "unit": "units"},
+    {"name": "invB_w3", "lower": 0, "upper": null, "type": "continuous", "unit": "units"}
+  ],
+  "objective": {
+    "offset": 0,
+    "coefficients": {
+      "prodA_w1": 12.0, "prodA_w2": 12.0, "prodA_w3": 12.5, "prodA_w4": 12.5,
+      "prodB_w1": 9.0,  "prodB_w2": 9.0,  "prodB_w3": 9.5,  "prodB_w4": 9.5,
+      "invA_w1": 1.2, "invA_w2": 1.2, "invA_w3": 1.2,
+      "invB_w1": 0.8, "invB_w2": 0.8, "invB_w3": 0.8
+    }
+  },
+  "constraints": [
+    {"name": "balanceA_w1", "sense": "=", "rhs": 120,
+      "coefficients": {"prodA_w1": 1, "invA_w1": -1}},
+    {"name": "balanceA_w2", "sense": "=", "rhs": 140,
+      "coefficients": {"invA_w1": 1, "prodA_w2": 1, "invA_w2": -1}},
+    {"name": "balanceA_w3", "sense": "=", "rhs": 130,
+      "coefficients": {"invA_w2": 1, "prodA_w3": 1, "invA_w3": -1}},
+    {"name": "balanceA_w4", "sense": "=", "rhs": 150,
+      "coefficients": {"invA_w3": 1, "prodA_w4": 1}},
+    {"name": "balanceB_w1", "sense": "=", "rhs": 200,
+      "coefficients": {"prodB_w1": 1, "invB_w1": -1}},
+    {"name": "balanceB_w2", "sense": "=", "rhs": 180,
+      "coefficients": {"invB_w1": 1, "prodB_w2": 1, "invB_w2": -1}},
+    {"name": "balanceB_w3", "sense": "=", "rhs": 210,
+      "coefficients": {"invB_w2": 1, "prodB_w3": 1, "invB_w3": -1}},
+    {"name": "balanceB_w4", "sense": "=", "rhs": 190,
+      "coefficients": {"invB_w3": 1, "prodB_w4": 1}},
+    {"name": "capacity_w1", "sense": "<=", "rhs": 500,
+      "coefficients": {"prodA_w1": 1.5, "prodB_w1": 1.0}},
+    {"name": "capacity_w2", "sense": "<=", "rhs": 500,
+      "coefficients": {"prodA_w2": 1.5, "prodB_w2": 1.0}},
+    {"name": "capacity_w3", "sense": "<=", "rhs": 520,
+      "coefficients": {"prodA_w3": 1.5, "prodB_w3": 1.0}},
+    {"name": "capacity_w4", "sense": "<=", "rhs": 520,
+      "coefficients": {"prodA_w4": 1.5, "prodB_w4": 1.0}}
+  ],
+  "metadata": {"source": "synthetic, standard multi-period lot-sizing LP formulation"}
+}

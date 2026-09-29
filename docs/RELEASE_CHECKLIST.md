@@ -1,0 +1,22 @@
+# Release checklist
+
+- [ ] Confirm continuous LP scope and CPU simplex limitation are stated accurately.
+- [ ] Confirm no claim that GPU simplex ran or accelerated an LP.
+- [ ] Confirm the refinery data is labeled MRPL-inspired synthetic data.
+- [ ] Preserve the latest sparse time-limit record and earlier completed runs.
+- [ ] Verify the production path does not call SciPy/HiGHS as a fallback.
+- [ ] Install the five local packages from the repository root.
+- [ ] Run the offline root suite and distinguish API/GPU skips from passes.
+- [ ] Start the canonical API/UI launcher and check API health and UI response.
+- [ ] Run both UI/API E2E trees against that live launcher.
+- [ ] Run the independent live reference validation suite.
+- [ ] Run the live release-validation matrix and report every status.
+- [ ] Run the in-process benchmark matrix and retain all result categories.
+- [ ] Run industrial flagship and scenario examples.
+- [ ] Run the 1,440-variable sparse model and retain timeout outcomes.
+- [ ] Compare any completed sparse solve with SciPy/HiGHS and original-model verification.
+- [ ] Check deterministic repeatability and security/input-validation tests.
+- [ ] Review browser offline/reconnect and desktop/mobile rendering.
+- [ ] Inspect the final diff for debug code, TODOs, fake values, unsafe deserialization, traceback leakage, unintended dependencies, and generated artifacts.
+- [ ] Verify the final archive contents and CRC without overwriting an existing archive.
+- [ ] Record unavailable clean-network install or hardware checks as limitations.

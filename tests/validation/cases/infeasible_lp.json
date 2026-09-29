@@ -1,0 +1,16 @@
+{
+  "name": "infeasible_lp",
+  "title": "Infeasible LP",
+  "description": "Contradictory constraints: x+y<=2 and x+y>=5 cannot hold simultaneously for x,y>=0. Used to verify the solver's infeasibility detection.",
+  "sense": "minimize",
+  "variables": [
+    {"name": "x", "lower": 0, "upper": null, "type": "continuous"},
+    {"name": "y", "lower": 0, "upper": null, "type": "continuous"}
+  ],
+  "objective": {"offset": 0, "coefficients": {"x": 1, "y": 1}},
+  "constraints": [
+    {"name": "c1", "sense": "<=", "rhs": 2, "coefficients": {"x": 1, "y": 1}},
+    {"name": "c2", "sense": ">=", "rhs": 5, "coefficients": {"x": 1, "y": 1}}
+  ],
+  "expected": {"status": "infeasible"}
+}

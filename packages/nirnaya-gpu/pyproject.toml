@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nirnaya-gpu"
+version = "0.1.0"
+description = "Device-independent hardware acceleration layer for Nirnaya (CPU/GPU backends for sparse numerical kernels)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.23",
+]
+
+[project.optional-dependencies]
+scipy = ["scipy>=1.9"]
+cuda = ["cupy-cuda12x>=12.0"]
+test = ["pytest>=7.0"]
+dev = ["scipy>=1.9", "pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

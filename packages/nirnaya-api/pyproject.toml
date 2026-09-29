@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nirnaya-api"
+version = "0.1.0"
+description = "Application/service layer (Python API, CLI, REST API) around the Nirnaya solver stack."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Nirnaya Project" }]
+
+dependencies = [
+    "pydantic>=2.0,<3.0",
+    "click>=8.1",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+
+[project.optional-dependencies]
+# The real solver stack this layer orchestrates. Installed separately;
+# nirnaya-api degrades gracefully (with clear errors) if these are absent.
+core = [
+    "nirnaya-core",
+    "nirnaya-presolve",
+    "nirnaya-solver",
+    "nirnaya-gpu",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "httpx>=0.27",
+    "click>=8.1",
+]
+
+[project.scripts]
+nirnaya = "nirnaya_api.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

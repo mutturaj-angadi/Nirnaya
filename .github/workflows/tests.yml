@@ -1,0 +1,23 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e ./packages/nirnaya-core -e ./packages/nirnaya-presolve -e ./packages/nirnaya-gpu -e ./packages/nirnaya-solver -e ./packages/nirnaya-api pytest pytest-asyncio httpx
+      - run: python -m pytest tests/solver tests/integration packages/nirnaya-core/tests packages/nirnaya-gpu/tests packages/nirnaya-api/tests
+      - run: |
+          export NIRNAYA_API_URL=http://127.0.0.1:8000
+          python -m uvicorn nirnaya_api.server:app --host 127.0.0.1 --port 8000 &
+          echo $! > /tmp/nirnaya-api.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail http://127.0.0.1:8000/api/health >/dev/null; then break; fi
+            sleep 1
+          done
+          python -m pytest apps/nirnaya-ui/tests/e2e/test_pipeline.py -q -k 'not sparse'
+          python apps/nirnaya-ui/validation/run_validation_suite.py --base-url http://127.0.0.1:8000 --backends cpu --cases bounded_production feasible_lp infeasible_lp unbounded_lp
+          kill "$(cat /tmp/nirnaya-api.pid)"

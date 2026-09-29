@@ -1,0 +1,18 @@
+{
+  "engine": "scipy.optimize.linprog(method=highs)",
+  "status": "optimal",
+  "objective": 636.0,
+  "variables": {
+    "reformate_reg": 0.0,
+    "reformate_prem": 18.0,
+    "fcc_reg": 20.0,
+    "fcc_prem": 4.0,
+    "alkylate_reg": 0.0,
+    "alkylate_prem": 10.0,
+    "lsr_reg": 0.0,
+    "lsr_prem": 14.0
+  },
+  "iterations": 2,
+  "raw_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "max_residual": 0.0
+}

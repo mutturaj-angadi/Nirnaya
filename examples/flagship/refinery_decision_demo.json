@@ -1,0 +1,361 @@
+{
+  "name": "refinery_decision_demo",
+  "title": "Refinery Production & Blending \u2014 Synthetic Decision Scenario",
+  "description": "Choose a three-crude slate, allocate four intermediate streams into two gasoline grades, and ship to domestic/export markets while meeting illustrative quality, demand, and capacity constraints.",
+  "domain": "petroleum-refining",
+  "sense": "maximize",
+  "variables": [
+    {
+      "name": "crude_light",
+      "lower": 0,
+      "upper": 38.0,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "crude_medium",
+      "lower": 0,
+      "upper": 42.0,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "crude_heavy",
+      "lower": 0,
+      "upper": 30.0,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "blend_reformate_regular",
+      "lower": 0,
+      "upper": null,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "blend_reformate_premium",
+      "lower": 0,
+      "upper": null,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "blend_fcc_regular",
+      "lower": 0,
+      "upper": null,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "blend_fcc_premium",
+      "lower": 0,
+      "upper": null,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "blend_alkylate_regular",
+      "lower": 0,
+      "upper": null,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "blend_alkylate_premium",
+      "lower": 0,
+      "upper": null,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "blend_lsr_regular",
+      "lower": 0,
+      "upper": null,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "blend_lsr_premium",
+      "lower": 0,
+      "upper": null,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "ship_domestic_regular",
+      "lower": 0,
+      "upper": 42.0,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "ship_domestic_premium",
+      "lower": 0,
+      "upper": 28.0,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "ship_export_regular",
+      "lower": 0,
+      "upper": 30.0,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    },
+    {
+      "name": "ship_export_premium",
+      "lower": 0,
+      "upper": 20.0,
+      "unit": "kbbl/day",
+      "type": "continuous"
+    }
+  ],
+  "objective": {
+    "offset": 0.0,
+    "coefficients": {
+      "crude_light": -48.0,
+      "crude_medium": -39.0,
+      "crude_heavy": -32.0,
+      "ship_domestic_regular": 98.0,
+      "ship_domestic_premium": 114.0,
+      "ship_export_regular": 93.0,
+      "ship_export_premium": 108.0
+    }
+  },
+  "constraints": [
+    {
+      "name": "refinery_throughput_capacity",
+      "sense": "<=",
+      "rhs": 88.0,
+      "coefficients": {
+        "crude_light": 1.0,
+        "crude_medium": 1.0,
+        "crude_heavy": 1.0
+      }
+    },
+    {
+      "name": "reformate_production_balance",
+      "sense": "<=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_reformate_regular": 1.0,
+        "blend_reformate_premium": 1.0,
+        "crude_light": -0.25,
+        "crude_medium": -0.18,
+        "crude_heavy": -0.1
+      }
+    },
+    {
+      "name": "fcc_production_balance",
+      "sense": "<=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_fcc_regular": 1.0,
+        "blend_fcc_premium": 1.0,
+        "crude_light": -0.3,
+        "crude_medium": -0.38,
+        "crude_heavy": -0.42
+      }
+    },
+    {
+      "name": "alkylate_production_balance",
+      "sense": "<=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_alkylate_regular": 1.0,
+        "blend_alkylate_premium": 1.0,
+        "crude_light": -0.08,
+        "crude_medium": -0.12,
+        "crude_heavy": -0.05
+      }
+    },
+    {
+      "name": "lsr_production_balance",
+      "sense": "<=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_lsr_regular": 1.0,
+        "blend_lsr_premium": 1.0,
+        "crude_light": -0.25,
+        "crude_medium": -0.2,
+        "crude_heavy": -0.18
+      }
+    },
+    {
+      "name": "regular_product_balance",
+      "sense": "=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_reformate_regular": 1.0,
+        "blend_fcc_regular": 1.0,
+        "blend_alkylate_regular": 1.0,
+        "blend_lsr_regular": 1.0,
+        "ship_domestic_regular": -1.0,
+        "ship_export_regular": -1.0
+      }
+    },
+    {
+      "name": "premium_product_balance",
+      "sense": "=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_reformate_premium": 1.0,
+        "blend_fcc_premium": 1.0,
+        "blend_alkylate_premium": 1.0,
+        "blend_lsr_premium": 1.0,
+        "ship_domestic_premium": -1.0,
+        "ship_export_premium": -1.0
+      }
+    },
+    {
+      "name": "regular_octane_RON_87",
+      "sense": ">=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_reformate_regular": 12.5,
+        "blend_fcc_regular": 2.5,
+        "blend_alkylate_regular": 11.0,
+        "blend_lsr_regular": -8.0
+      }
+    },
+    {
+      "name": "premium_octane_RON_92",
+      "sense": ">=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_reformate_premium": 7.5,
+        "blend_fcc_premium": -2.5,
+        "blend_alkylate_premium": 6.0,
+        "blend_lsr_premium": -13.0
+      }
+    },
+    {
+      "name": "regular_RVP_9_psi",
+      "sense": "<=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_reformate_regular": -3.9,
+        "blend_fcc_regular": -2.9,
+        "blend_alkylate_regular": -8.9,
+        "blend_lsr_regular": 6.1
+      }
+    },
+    {
+      "name": "premium_RVP_10_psi",
+      "sense": "<=",
+      "rhs": 0.0,
+      "coefficients": {
+        "blend_reformate_premium": -4.9,
+        "blend_fcc_premium": -3.9,
+        "blend_alkylate_premium": -9.9,
+        "blend_lsr_premium": 5.1
+      }
+    },
+    {
+      "name": "domestic_regular_minimum_demand",
+      "sense": ">=",
+      "rhs": 18.0,
+      "coefficients": {
+        "ship_domestic_regular": 1.0
+      }
+    },
+    {
+      "name": "domestic_premium_minimum_demand",
+      "sense": ">=",
+      "rhs": 10.0,
+      "coefficients": {
+        "ship_domestic_premium": 1.0
+      }
+    },
+    {
+      "name": "export_regular_minimum_demand",
+      "sense": ">=",
+      "rhs": 8.0,
+      "coefficients": {
+        "ship_export_regular": 1.0
+      }
+    },
+    {
+      "name": "export_premium_minimum_demand",
+      "sense": ">=",
+      "rhs": 5.0,
+      "coefficients": {
+        "ship_export_premium": 1.0
+      }
+    },
+    {
+      "name": "domestic_loading_capacity",
+      "sense": "<=",
+      "rhs": 62.0,
+      "coefficients": {
+        "ship_domestic_regular": 1.0,
+        "ship_domestic_premium": 1.0
+      }
+    },
+    {
+      "name": "export_loading_capacity",
+      "sense": "<=",
+      "rhs": 44.0,
+      "coefficients": {
+        "ship_export_regular": 1.0,
+        "ship_export_premium": 1.0
+      }
+    }
+  ],
+  "metadata": {
+    "dataset_id": "nirnaya_refinery_decision_synthetic_v1",
+    "category": "industrial-style synthetic",
+    "source": "Nirnaya-authored illustrative assumptions; no operational MRPL or third-party plant data",
+    "license": "Nirnaya-authored synthetic data; no separate license file",
+    "units_note": "Throughput in thousand barrels/day; objective contribution in illustrative currency units/day.",
+    "assumptions": {
+      "crude_availability_kbbl_day": {
+        "light": 38.0,
+        "medium": 42.0,
+        "heavy": 30.0
+      },
+      "yield_fraction_by_crude_and_stream": {
+        "light": {
+          "reformate": 0.25,
+          "fcc": 0.3,
+          "alkylate": 0.08,
+          "lsr": 0.25
+        },
+        "medium": {
+          "reformate": 0.18,
+          "fcc": 0.38,
+          "alkylate": 0.12,
+          "lsr": 0.2
+        },
+        "heavy": {
+          "reformate": 0.1,
+          "fcc": 0.42,
+          "alkylate": 0.05,
+          "lsr": 0.18
+        }
+      },
+      "crude_cost_per_kbbl": {
+        "light": 48.0,
+        "medium": 39.0,
+        "heavy": 32.0
+      },
+      "shipment_caps_kbbl_day": {
+        "domestic_regular": 42.0,
+        "domestic_premium": 28.0,
+        "export_regular": 30.0,
+        "export_premium": 20.0
+      },
+      "shipment_minimums_kbbl_day": {
+        "domestic_regular": 18.0,
+        "domestic_premium": 10.0,
+        "export_regular": 8.0,
+        "export_premium": 5.0
+      },
+      "quality_specs": "Linear blend-quality constraints use weighted deviation from RON and RVP thresholds; values are illustrative only.",
+      "objective": "Net illustrative market contribution less crude acquisition cost; no tax, emissions, or operating complexity modeled."
+    },
+    "preprocessing": [],
+    "random_seed": null
+  }
+}
